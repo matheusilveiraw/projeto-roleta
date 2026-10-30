@@ -3,6 +3,8 @@ const ctx = canvas.getContext('2d');
 const botao = document.getElementById('girar');
 const resultado = document.getElementById('resultado');
 const total = document.getElementById('total');
+const botaoClassificar = document.getElementById('classificar');
+const classificacao = document.getElementById('classificacao');
 
 const cores = ['#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#5f27cd', '#ff9ff3', '#54a0ff', '#ff9f43'];
 
@@ -12,6 +14,7 @@ const todas = PALAVRAS; // todas as palavras do palavras.txt (vem do palavras.js
 let palavras = [];      // as que estão desenhadas na roleta agora
 let angulo = 0;         // rotação atual em radianos
 let girando = false;
+let sorteada = null;    // última palavra sorteada
 
 function aleatorio(lista) {
   return lista[Math.floor(Math.random() * lista.length)];
@@ -75,6 +78,8 @@ function girar() {
   girando = true;
   botao.disabled = true;
   resultado.textContent = '';
+  classificacao.textContent = '';
+  botaoClassificar.hidden = true;
 
   // sorteia entre TODAS as palavras do arquivo
   const vencedora = aleatorio(todas);
@@ -106,6 +111,8 @@ function girar() {
       girando = false;
       botao.disabled = false;
       resultado.textContent = `🎉 ${vencedora}`;
+      sorteada = vencedora;
+      botaoClassificar.hidden = false;
     }
   }
 
@@ -113,6 +120,10 @@ function girar() {
 }
 
 botao.addEventListener('click', girar);
+
+botaoClassificar.addEventListener('click', () => {
+  classificacao.textContent = classificar(sorteada);
+});
 
 if (todas.length === 0) {
   resultado.textContent = 'O palavras.txt está vazio.';
